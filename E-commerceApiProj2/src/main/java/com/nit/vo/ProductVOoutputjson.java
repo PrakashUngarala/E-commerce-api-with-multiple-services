@@ -3,6 +3,7 @@ package com.nit.vo;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nit.Entity.InventryEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,23 +17,20 @@ public class ProductVOoutputjson{
 
 	private Integer pId;
 	
-	private String pName;
+	private String pname;
 	
 	private String companyName;
 	
-	private String mainCatagory;
-	
-	private String subCatagory;
-	
-	private Integer noOfProducts;
+	private String catagory;
 	
 	//@JsonIgnore
 	//private MultipartFile productImageMultipartFile;    //for uploading the image
 	
-	private Double price;
 	
 	private String discription;
 	
-	private String displayImage;                   //for displaying the image
+	private String displayImage;  //for displaying the image
+	
+	private InventryVO ieVO;
 	
 }

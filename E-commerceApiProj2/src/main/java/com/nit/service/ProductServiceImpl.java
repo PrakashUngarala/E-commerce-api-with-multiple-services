@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nit.Advice.ProductNotFoundException;
+import com.nit.Entity.InventryEntity;
 import com.nit.Entity.ProductEntity;
 import com.nit.repo.IProductRepo;
-
+import com.nit.vo.InventryVO;
 import com.nit.vo.ProductVOInput;
 import com.nit.vo.ProductVOoutputjson;
 @Service
@@ -23,9 +24,14 @@ public class ProductServiceImpl implements IProductService {
 	private IProductRepo repo;
 
 	@Override
-	public String addProduct(ProductVOInput productVOInput) throws IOException {
+	public String addProduct(ProductVOInput productVOInput)  {
 		ProductEntity proEn = new ProductEntity();
+		InventryEntity ie = new InventryEntity();
 		BeanUtils.copyProperties(productVOInput, proEn);
+		BeanUtils.copyProperties(productVOInput.getIeVO(), ie);
+		
+		proEn.setIe(ie);
+		ie.setPe(proEn);
 		//proEn.setProductPicBytes(productVOInput.getProductImageMultipartFile().getBytes());
 		ProductEntity save = repo.save(proEn);
 		return "Product is saved with id : "+save.getPId();
@@ -41,6 +47,9 @@ public class ProductServiceImpl implements IProductService {
 		for(ProductEntity ent : entities) {
 			ProductVOoutputjson vo = new ProductVOoutputjson();
 			BeanUtils.copyProperties(ent, vo);
+			InventryVO ievo = new InventryVO();
+			BeanUtils.copyProperties(ent.getIe(), ievo);
+			vo.setIeVO(ievo);
 			//String base64 = Base64.getEncoder().encodeToString(ent.getProductPicBytes());
 			//vo.setDisplayImage(base64);
 			vos.add(vo);

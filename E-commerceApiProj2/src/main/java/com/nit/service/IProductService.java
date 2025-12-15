@@ -10,7 +10,7 @@ import com.nit.vo.ProductVOoutputjson;
 public interface IProductService {
 
 	
-	public String addProduct(ProductVOInput productVOInput)throws IOException;
+	public String addProduct(ProductVOInput productVOInput);
 	
 	public List<ProductVOoutputjson> showAllProducts();
 	

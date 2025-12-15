@@ -5,12 +5,16 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -23,38 +27,37 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "E-comm_Products_service")
+@Table(name = "E-commProductsService")
 public class ProductEntity  {
 
 	@Id
 	@SequenceGenerator(name = "gen2",sequenceName = "e-commerce-seq",initialValue = 1000,allocationSize = 1)
 	@GeneratedValue(generator = "gen2",strategy = GenerationType.SEQUENCE)
 	private Integer pId;
-	@NonNull
-	@Column(length = 50)
-	private String pName;
-	@NonNull
-	@Column(length = 50)
+	
+	@Column(length = 30)
+	private String pname;
+	
+	@Column(length = 30)
 	private String companyName;
-	@NonNull
-	@Column(length = 50)
-	private String mainCatagory;
-	@NonNull
-	@Column(length = 50)
-	private String subCatagory;
+	
+	
+	@Column(length = 30)
+	private String catagory;
+	
 	//@Lob
 	//@NonNull
 	//private byte[] productPicBytes;
-	@NonNull
-	@Column(length = 50)
+	
 	private Double price;
 	@NonNull
 	@Column(length = 150)
 	private String discription;
 	
-	@NonNull
-	@Column
-	private Integer noOfProducts;
+	
+	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@JoinColumn(name = "ieId",referencedColumnName = "ieId")
+	private InventryEntity ie;
 	
 	@Version
 	@Column(name="update_count")

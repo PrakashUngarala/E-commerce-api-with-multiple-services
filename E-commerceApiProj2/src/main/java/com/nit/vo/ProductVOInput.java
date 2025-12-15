@@ -2,6 +2,8 @@ package com.nit.vo;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nit.Entity.InventryEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,7 @@ public class ProductVOInput {
 
 	private Integer pId;
 	
-	private String pName;
+	private String pname;
 	
 	private String companyName;
 	
@@ -25,10 +27,10 @@ public class ProductVOInput {
 	//@JsonIgnore
 	//private MultipartFile productImageMultipartFile;    //for uploading the image
 	
-	private Double price;
 	
 	private String discription;
 	
+	private InventryVO ieVO;
 	//private String displayImage;                   //for displaying the image
 	
 }

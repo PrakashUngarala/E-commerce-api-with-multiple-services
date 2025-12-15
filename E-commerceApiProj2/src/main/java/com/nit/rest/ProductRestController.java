@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +38,7 @@ public class ProductRestController {
 	
 	
 	@PostMapping("/addProduct")
-	public ResponseEntity<String> addingProduct(@ModelAttribute ProductVOInput productVOInput) throws IOException{
+	public ResponseEntity<String> addingProduct(@RequestBody ProductVOInput productVOInput) {
 		
 		
 		return new ResponseEntity<String>(service.addProduct(productVOInput),HttpStatus.OK);
