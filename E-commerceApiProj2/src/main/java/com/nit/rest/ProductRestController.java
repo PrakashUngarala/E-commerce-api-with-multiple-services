@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,7 +26,7 @@ import com.nit.vo.ProductVOInput;
 import com.nit.vo.ProductVOoutputjson;
 
 @RestController
-@RequestMapping("rest-api")
+@RequestMapping("/products-api")
 public class ProductRestController {
 
 	@Autowired
@@ -33,11 +36,15 @@ public class ProductRestController {
 
 	@GetMapping("/")
 	public ResponseEntity<String> homePage(){
+		//Authentication auth
+		//String username = auth.getName();
+		//System.out.println("user name is : "+username);
 		return new ResponseEntity<>("Welcome to E- commerce website",HttpStatus.OK);
 	}
 	
 	
 	@PostMapping("/addProduct")
+	@PreAuthorize("hasAuthority('EMPLOYEE')")
 	public ResponseEntity<String> addingProduct(@RequestBody ProductVOInput productVOInput) {
 		
 		
@@ -47,6 +54,7 @@ public class ProductRestController {
 	
 	
 	@GetMapping("/showAllProducts")
+	@PreAuthorize("hasAnyAuthority('EMPLOYEE','CUSTOMER')")
 	public ResponseEntity<List<ProductVOoutputjson>> showAllProducts(){
 		
 		System.out.println("show all products method is executed");
@@ -56,6 +64,7 @@ public class ProductRestController {
 	
 	
 	@GetMapping("/findProductByID/{id}")
+	@PreAuthorize("hasAnyAuthority('EMPLOYEE','CUSTOMER')")
 	public ResponseEntity<ProductVOoutputjson> findingProductByID(@PathVariable("id") Integer id){
 		try {
 			Thread.sleep(5000);
@@ -70,6 +79,7 @@ public class ProductRestController {
 	
 	
 	@PatchMapping("/updatePrice/{id}/{price}")
+	@PreAuthorize("hasAuthority('EMPLOYEE')")
 	public ResponseEntity<String> updatingThePrice(@PathVariable("id") Integer id,@PathVariable("price") Double price){
 		String msg = service.updatingThePrice(id, price);
 		
@@ -78,6 +88,7 @@ public class ProductRestController {
 	
 	
 	@PutMapping("/updatingFullProduct")
+	@PreAuthorize("hasAuthority('EMPLOYEE')")
 	public ResponseEntity<String> updatingFullPro(@ModelAttribute ProductVOInput productVOInput){
 		
 		String msg = service.updatingTheProduct(productVOInput);
@@ -87,11 +98,25 @@ public class ProductRestController {
 	
 	
 	@DeleteMapping("/deletingWithId/{id}")
+	@PreAuthorize("hasAuthority('EMPLOYEE')")
 	public ResponseEntity<String> deletingWithId(@PathVariable Integer id){
 		String msg = service.deletingById(id);
 		
 		return new ResponseEntity<>(msg,HttpStatus.OK);
 	}
 	
+	//username or password wrong
+	@GetMapping("/accessdenied")
+	public ResponseEntity<String> accessDenied(){
+		
+		return new ResponseEntity<String>("accessdenied method is excuted username or password wrong",HttpStatus.UNAUTHORIZED);
+	}
 	
+	
+	
+	@GetMapping("/noPermisson")
+	public ResponseEntity<String> noPermisson(){
+		
+		return new ResponseEntity<String>("noPermisson method is excuted no permission for this endpoint",HttpStatus.FORBIDDEN);
+	}
 }
