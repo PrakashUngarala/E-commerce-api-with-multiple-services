@@ -3,6 +3,7 @@ package com.nit.Filter;
 import java.net.URI;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -22,6 +23,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
 
+	@Autowired
 	private JwtUtil jwtUtil;
 
 	@Override
