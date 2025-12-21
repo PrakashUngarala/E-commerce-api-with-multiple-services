@@ -24,4 +24,12 @@ public class GlobalExceptionHandler {
 		
 	    return new ResponseEntity<>("ProductNotFoundException occured : "+ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	
+	
+	@ExceptionHandler(UserNameIsNullExp.class)
+	public ResponseEntity<String> handleIOException1(UserNameIsNullExp ex) {
+		
+	    return new ResponseEntity<>("UserNameIsNullExp occured : "+ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

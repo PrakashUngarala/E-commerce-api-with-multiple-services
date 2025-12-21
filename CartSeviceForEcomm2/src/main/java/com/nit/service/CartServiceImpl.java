@@ -1,5 +1,6 @@
 package com.nit.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,27 +58,34 @@ public class CartServiceImpl  implements ICartService{
 	}
 	@Override
 	public List<Integer> retrivingProductsOfUser(String username) {
+		List<Integer> products = new ArrayList<>();
 		if(username == null) {
 			 throw new UserNameIsNull(null);
 		}
 		List<CartEntity> carts = cartrepo.findAll();
 		
-		CartEntity ce = null;
+		
 		int flag = 0;
 		for(CartEntity cart : carts) {
 			if(username.equals(cart.getUsername())) {
-				ce = cart;
 				flag =1;
-				break;
+				List<CartItemsEntity> items = itemsrepo.findAll();
+				items.forEach(item -> {
+					if(item.getCart().getCid().equals(cart.getCid())) {
+						products.add(item.getPid());
+					}
+				});
+					
 			}
 		}
 		if(flag == 0) {
-			ce = new CartEntity();
+			CartEntity ce = new CartEntity();
 			ce.setUsername(username);
+			cartrepo.save(ce);
 		}
-		cartrepo.save(ce);
 		
-		return null;
+		
+		return products;
 	}
 
 }

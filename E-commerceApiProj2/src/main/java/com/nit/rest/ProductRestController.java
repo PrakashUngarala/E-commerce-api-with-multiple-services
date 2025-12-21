@@ -34,6 +34,8 @@ public class ProductRestController {
 	@Autowired
 	private IProductService service;
 	
+	
+	
 	public String getLoggedInUsername() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return auth.getName();
@@ -125,4 +127,17 @@ public class ProductRestController {
 		
 		return new ResponseEntity<String>("noPermisson method is excuted no permission for this endpoint",HttpStatus.FORBIDDEN);
 	}
+	
+	
+	@GetMapping("/userCartProducts")
+	public ResponseEntity<List<ProductVOoutputjson>> userCartProducts(){
+		
+		String username = "prakash";
+		//need to user name dynamically
+		
+		return new ResponseEntity<List<ProductVOoutputjson>>(service.retrivingUserCart(username),HttpStatus.ACCEPTED); 
+		
+	}
+	
+	
 }

@@ -8,11 +8,15 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nit.Advice.ProductNotFoundException;
+import com.nit.Advice.UserNameIsNullExp;
 import com.nit.Entity.InventryEntity;
 import com.nit.Entity.ProductEntity;
+import com.nit.feignClient.ICartServiceClient;
 import com.nit.repo.IProductRepo;
 import com.nit.vo.InventryVO;
 import com.nit.vo.ProductVOInput;
@@ -22,6 +26,9 @@ public class ProductServiceImpl implements IProductService {
 
 	@Autowired
 	private IProductRepo repo;
+	
+	@Autowired
+	private ICartServiceClient cartClient;
 
 	@Override
 	public String addProduct(ProductVOInput productVOInput)  {
@@ -139,6 +146,33 @@ public class ProductServiceImpl implements IProductService {
 		return "the product is deleted whith is id "+id+" successfully ";
 		
 		
+	}
+	
+	@Override
+	public List<ProductVOoutputjson> retrivingUserCart(String username) {
+		
+		ResponseEntity<List<Integer>> productsOfUser = cartClient.productsOfUser(username);
+		int statusCode = productsOfUser.getStatusCode().value();
+		if(statusCode == 502) {
+			throw new UserNameIsNullExp("Username is null");
+		}
+		
+		List<ProductVOoutputjson> products = new ArrayList<ProductVOoutputjson>();
+		List<Integer> body = productsOfUser.getBody();
+		
+		body.forEach( pid -> {
+			Optional<ProductEntity> byId = repo.findById(pid);
+			if(byId.isPresent()) {
+				ProductVOoutputjson vo = new ProductVOoutputjson();
+				BeanUtils.copyProperties(byId.get(),vo);
+				products.add(vo);
+			}
+		});
+		
+		
+		
+		
+		return products;
 	}
 	
 }

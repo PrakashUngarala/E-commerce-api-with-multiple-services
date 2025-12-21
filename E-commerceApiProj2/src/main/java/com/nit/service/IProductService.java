@@ -22,4 +22,6 @@ public interface IProductService {
 	
 	public String deletingById(Integer id);
 	
+	public List<ProductVOoutputjson> retrivingUserCart(String username);
+	
 }

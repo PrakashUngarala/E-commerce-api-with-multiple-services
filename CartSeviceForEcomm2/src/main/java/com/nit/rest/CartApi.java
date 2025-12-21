@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +23,12 @@ public class CartApi {
 	private ICartService service;
 	
 	@GetMapping("/")
+	@PreAuthorize("hasAuthority('CUSTOMER')")
 	public ResponseEntity<String> welcomeMsg(){
 		return new ResponseEntity<String>("Welcome to cart",HttpStatus.ACCEPTED);
 	}
 	
-	@PostMapping("/addtocart/username/productid")
+	@PostMapping("/addtocart/{username}/{productid}")
 	public ResponseEntity<Boolean> addToCart(@PathVariable String username,@PathVariable Integer productid ){
 		
 		return new ResponseEntity<Boolean>(service.addtocart(username, productid),HttpStatus.ACCEPTED);
